@@ -13,23 +13,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Deploy to EC2
+      - name: Copy files to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          source: "."
+          target: "/home/ubuntu/moneymap"
+
+      - name: Deploy on EC2
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
-            if [ ! -d "moneymap" ]; then
-              git clone https://github.com/Kaushal12/Moneymap---Smart-Budget-Planner.git moneymap
-            fi
+            cd /home/ubuntu/moneymap
 
-            cd moneymap
-            git pull
+            docker compose down || true
 
-            docker stop moneymap || true
-            docker rm moneymap || true
-
-            docker build -t moneymap .
-
-            docker run -d -p 80:3000 --name moneymap moneymap
+            docker compose up -d --build
