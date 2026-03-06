@@ -21,7 +21,7 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           script: |
             if [ ! -d "moneymap" ]; then
-              git clone https://github.com/Kaushal12/Moneymap---Smart-Budget-Planner.git moneymap
+              git clone https://github.com/Kaushal12/moneymap--smart-budget-planner.git moneymap
             fi
 
             cd moneymap
