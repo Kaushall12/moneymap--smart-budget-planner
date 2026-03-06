@@ -31,9 +31,6 @@ jobs:
           script: |
             cd /home/ubuntu/moneymap
 
-            docker stop moneymap || true
-            docker rm moneymap || true
+            docker compose down || true
 
-            docker build -t moneymap .
-
-            docker run -d -p 80:3000 --name moneymap moneymap
+            docker compose up -d --build
